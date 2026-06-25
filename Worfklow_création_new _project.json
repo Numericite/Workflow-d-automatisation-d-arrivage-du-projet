@@ -1,0 +1,2241 @@
+{
+  "name": "Worfklow_création_new _project",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "folder",
+        "path": "=/1 - Gestion administrative/tests/{{ $('Extraction_donnes1').item.json.emplacement }}/{{ $('Extraction_donnes1').item.json.folder_name }}/Documents_Admins"
+      },
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        5184,
+        1936
+      ],
+      "id": "ffc936f7-8de8-46ea-9558-5eb12cbd83a7",
+      "name": "Create folder \"doc admin\"1",
+      "credentials": {
+        "nextCloudApi": {
+          "id": "oqQUw1flw37R99gm",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "path": "=/1 - Gestion administrative/tests/{{ $('Extraction_donnes1').item.json.emplacement }}/{{ $('Extraction_donnes1').item.json.folder_name }}/Livrables"
+      },
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        5184,
+        2128
+      ],
+      "id": "b221fe91-9aab-4193-91a3-82092614abc6",
+      "name": "Create a folder \" livrable\"1",
+      "credentials": {
+        "nextCloudApi": {
+          "id": "oqQUw1flw37R99gm",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "path": "=/1 - Gestion administrative/tests/{{ $('Extraction_donnes1').item.json.emplacement }}/{{ $('Extraction_donnes1').item.json.folder_name }}/Facturations"
+      },
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        5200,
+        2320
+      ],
+      "id": "24f3184f-bf6e-48d7-959e-9035de7798fd",
+      "name": "Create a folder facturations1",
+      "credentials": {
+        "nextCloudApi": {
+          "id": "oqQUw1flw37R99gm",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "Pog15O56gTc90QZS",
+          "mode": "list",
+          "cachedResultName": "Id_project",
+          "cachedResultUrl": "/projects/arE7nkATuDeUBPuz/datatables/Pog15O56gTc90QZS"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $json.project_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        3360,
+        2656
+      ],
+      "id": "86097dac-cdab-47a6-9968-9f04b659dc10",
+      "name": "Get row(s)3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\n\nconst counter = String(data.id).padStart(4, '0');\n\nconst cleanName = data.project_name\n  .toUpperCase()\n  .replace(/\\s+/g, '_')\n  .replace(/[^A-Z0-9_]/g, '');\n\nconst poles = typeof data.pole === \"string\"\n  ? JSON.parse(data.pole)\n  : data.pole;\n\nconst isMultiPole = Array.isArray(poles) && poles.length > 1;\n\n// Mapping nom pôle -> code\nconst poleCodeMap = {\n  \"Pôle Tech\": \"dev\",\n  \"Pôle juridique\": \"jur\",\n  \"Pôle consultance\": \"cons\",\n  \"Pôle communication\": \"com\",\n  \"EGov\": \"egov\",\n  \"Pôle Bizdev\": \"bizdev\",\n  \"Pôle RP\": \"rp\",\n};\n// Code du pôle\nconst poleCode = isMultiPole\n  ? \"multi\"\n  : (poleCodeMap[poles[0]] || \"unknown\");\n\n// Nom dossier\nconst folder_name = `${poleCode.toUpperCase()}-PRJ${counter}-${cleanName}`;\n\nconst emplacement = isMultiPole\n  ? \"MULTI_POLE\"\n  : poleCode.toUpperCase();\n\n\n\nreturn [{\n  json: {\n    ...data,\n    emplacement,\n    is_multi_pole: isMultiPole,\n    folder_name\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3648,
+        2864
+      ],
+      "id": "62fbd438-6ff3-4e98-8120-0233ba250f21",
+      "name": "Extraction_donnes1"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "Pog15O56gTc90QZS",
+          "mode": "list",
+          "cachedResultName": "Id_project",
+          "cachedResultUrl": "/projects/arE7nkATuDeUBPuz/datatables/Pog15O56gTc90QZS"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $json.project_id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        3360,
+        2128
+      ],
+      "id": "112b869b-9c92-4ac8-90fc-7b6d81e2fac4",
+      "name": "Get row(s)4"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    project_name: $input.first().json.project_name,\n    Client: $input.first().json.client_name,\n    pole:   $input.first().json.poles,\n    description:$input.first().json.description,\n    montant:$input.first().json.montant,\n    contacts: $input.first().json.contacts,\n    equipes:$input.first().json.equipes,\n    date_debut: $input.first().json.date_debut,\n    id: $input.first().json.project_id\n  }\n]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2928,
+        2928
+      ],
+      "id": "c42eafca-7e8a-4dc1-9e75-f7dae9ac2e32",
+      "name": "rename_var1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "Pog15O56gTc90QZS",
+          "mode": "list",
+          "cachedResultName": "Id_project",
+          "cachedResultUrl": "/projects/arE7nkATuDeUBPuz/datatables/Pog15O56gTc90QZS"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "project_name": "={{ $json.project_name }}",
+            "Client": "={{ $json.Client }}",
+            "pole": "={{ JSON.stringify($json.pole.map(p => p.pole_selected))}}",
+            "montant": "={{ $json.montant }}",
+            "description": "={{ $json.description }}",
+            "date_debut": "={{ $json.date_debut }}",
+            "contacts": "={{ JSON.stringify($json.contacts.map(p => p.mail))}}",
+            "equipes": "={{ JSON.stringify($json.equipes.map(p => p.equipe_selected))}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "project_name",
+              "displayName": "project_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Client",
+              "displayName": "Client",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "pole",
+              "displayName": "pole",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "montant",
+              "displayName": "montant",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "contacts",
+              "displayName": "contacts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "date_debut",
+              "displayName": "date_debut",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ts_message",
+              "displayName": "ts_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "equipes",
+              "displayName": "equipes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        3296,
+        3200
+      ],
+      "id": "ee58d6c2-fd30-4eb3-8d31-ddc219175759",
+      "name": "Update row(s)2"
+    },
+    {
+      "parameters": {
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "U0AR9NLA6CS",
+          "mode": "list",
+          "cachedResultName": "m.dib"
+        },
+        "text": "=🔔*Alerte création* \n\n✅ La page notion a bien été créée , voici le lien vers la page : {{ $('HTTP Request4').item.json.url }}\n\n✅ Les dossier dans NextCloud ont été bien  créés, voici le lien vers le dossier : {{ $('HTTP Request4').item.json.properties.NextCloud.url }}",
+        "otherOptions": {
+          "unfurl_links": true
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        6192,
+        2816
+      ],
+      "id": "19736543-9138-43e3-b054-6dc181be5043",
+      "name": "Send a message",
+      "webhookId": "bf353e35-8905-453c-ab8a-95f83b2b7c1a",
+      "credentials": {
+        "slackApi": {
+          "id": "RvjZpTcV7ipuasPH",
+          "name": "n8n_bot_num"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "valide_form",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        1696,
+        2880
+      ],
+      "id": "cdede81d-47cd-40d7-a25d-b4d47cccc6c2",
+      "name": "Attente action formulaire1",
+      "webhookId": "56290568-c48d-46f2-ba0a-53324b6169fb"
+    },
+    {
+      "parameters": {
+        "jsCode": "const payloadString = $input.item.json.body.payload;\nconst payload = JSON.parse(payloadString);\n\nconst type = payload.type;\n\n// GESTION BOUTONS\n\nif (type === \"block_actions\") {\n\n  const action = payload.actions[0];\n\n  return [{\n    type: \"block_actions\",\n    action_id: action.action_id,\n    project_id: action.value,\n    trigger_id: payload.trigger_id\n  }];\n}\n// GESTION FORMULAIRES\n\nif (type === \"view_submission\") {\n\n  const callback_id = payload.view.callback_id;\n\n  const state = payload.view.state.values;\n\n\n// ===== POLES =====\n const poles =\n    state.pole_name.value.selected_options || [];\n\n  const results_poles = poles.map(item => ({\n    pole_selected: item.text.text,\n    pole_selected_value: item.value\n  }));\n\n\n// ===== CONTACTS =====\n  let result_contact = [];\n\n  const rawContacts =\n    state.contact?.value?.value || \"\";\n\n  if (rawContacts.trim() !== \"\") {\n\n    result_contact =\n      rawContacts\n        .split(\"\\n\")\n        .map(item => ({\n          mail: item.trim()\n        }));\n  }\n\n  // ===== CLIENTS ====\n  const selected =\n   state.client_name.value.selected_option.value;\n\n  const newClient =\n   state.new_client.value.value || \"\";\n\n  let finalClient;\n\n  if (selected === \"Autre\") {\n    finalClient = newClient;\n  } else {\n   finalClient = selected;\n   }\n\n  // ===== BUDGET =====\n\n  const montant =\n    state.project_budget?.value?.value || \"\";\n\n // ====EQUIPE==== \n   const equipe =\n    state.equipe_associe.value.selected_options || [];\n\n  const results_equipe = equipe.map(item => ({\n    equipe_selected: item.text.text,\n    equipe_selected_value: item.value\n  }))\n// ===== OBJET COMMUN =====\n\n  const commonData = {\n\n    project_name:\n      state.project_name.value.value,\n\n    client_name:\n     finalClient,\n\n    date_debut:\n      state.date_debut.value.selected_date,\n\n    montant,\n\n    description:\n      state.description.value.value,\n\n    contacts:\n      result_contact,\n\n    poles:\n      results_poles,\n    equipes : \n      results_equipe\n  };\n\n\n  // ===== RH EDIT =====\n\n  if (callback_id === \"rh_edit_form\") {\n\n    return [{\n      type: \"rh_edit_form\",\n\n      project_id:\n        payload.view.private_metadata,\n\n      ...commonData\n    }];\n  }\n\n\n \n\n  if (callback_id === \"new_project_form\") {\n\n    return [{\n      type: \"new_project_form\",\n      ...commonData\n    }];\n  }\n}"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2000,
+        2880
+      ],
+      "id": "7609a436-601a-422f-b20c-391f5a5a9343",
+      "name": "Extraction données formulaire1"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "new_project_form",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "3f31af25-f7df-4f3b-b1ad-a3389bd70cd5"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0feda0f7-4386-4752-9c6e-7db5905ac7a8",
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "block_actions",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "7aa6d952-bf4e-4085-a151-aaaf7e056248",
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "rh_edit_form",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        2304,
+        2864
+      ],
+      "id": "d798bf64-5670-47af-814f-c74007428c13",
+      "name": "Switch type d'actions1"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "Pog15O56gTc90QZS",
+          "mode": "list",
+          "cachedResultName": "Id_project",
+          "cachedResultUrl": "/projects/arE7nkATuDeUBPuz/datatables/Pog15O56gTc90QZS"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "project_name": "={{ $json.project_name }}",
+            "Client": "={{ $json.client_name }}",
+            "pole": "={{ JSON.stringify($json.poles.map(p => p.pole_selected))}}",
+            "description": "={{ $json.description }}",
+            "montant": "={{ $json.montant }}",
+            "contacts": "={{ JSON.stringify($json.contacts.map(p => p.mail))}}",
+            "date_debut": "={{ $json.date_debut }}",
+            "equipes": "={{ JSON.stringify($json.equipes.map(p => p.equipe_selected))}}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "project_name",
+              "displayName": "project_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Client",
+              "displayName": "Client",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "pole",
+              "displayName": "pole",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "montant",
+              "displayName": "montant",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "contacts",
+              "displayName": "contacts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "date_debut",
+              "displayName": "date_debut",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "ts_message",
+              "displayName": "ts_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "equipes",
+              "displayName": "equipes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {
+          "optimizeBulk": false
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2912,
+        1920
+      ],
+      "id": "a5dc31b2-14d1-4951-ad97-78e1e4880f5e",
+      "name": "Première insertion à la BD1"
+    },
+    {
+      "parameters": {
+        "select": "user",
+        "user": {
+          "__rl": true,
+          "value": "U0AR9NLA6CS",
+          "mode": "list",
+          "cachedResultName": "m.dib"
+        },
+        "messageType": "block",
+        "blocksUi": "={\n  \"channel\": \"U0AR9NLA6CS\",\n  \"text\": \"🔔 Nouveau projet à valider 🔔\",\n  \"blocks\": [\n    {\n      \"type\": \"section\",\n      \"text\": {\n        \"type\": \"mrkdwn\",\n        \"text\": \"🔔 Nouveau projet à valider 🔔 *\\n\\n*Projet:* {{ $json.project_name }}\\n*Client:* {{ $json.Client }} \\n*Pôle:* {{ JSON.parse($json.pole).join(\", \") }} \\n*Contact:* {{JSON.parse($json.contacts).join(\", \")}}\\n*Date de début:* {{ $json.date_debut }}\\n*Équipes :* {{ JSON.parse($json.equipes).join(\", \") }}\\n *Description:* {{ $json.description }}\"\n      }\n    },\n    {\n      \"type\": \"actions\",\n      \"elements\": [\n        {\n          \"type\": \"button\",\n          \"text\": { \"type\": \"plain_text\", \"text\": \"✅ Valider\" },\n          \"style\": \"primary\",\n          \"action_id\": \"validate_project\",\n          \"value\": \"{{ $json.id }}\"\n        },\n        {\n          \"type\": \"button\",\n          \"text\": { \"type\": \"plain_text\", \"text\": \"✏️ Modifier\" },\n          \"action_id\": \"edit_project\",\n          \"value\": \"{{ $json.id }}\"\n        }\n      ]\n    }\n  ]\n}\n     ",
+        "otherOptions": {
+          "botProfile": {
+            "imageValues": {
+              "profilePhotoType": "emoji"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        3408,
+        1648
+      ],
+      "id": "2efe0c3b-eea2-4a4e-95d9-8d6bb1305cd3",
+      "name": "Envoi message vérification à Marie1",
+      "webhookId": "cd115ee2-f5df-45eb-bf82-a979ec431e54",
+      "credentials": {
+        "slackApi": {
+          "id": "RvjZpTcV7ipuasPH",
+          "name": "n8n_bot_num"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action_id }}",
+                    "rightValue": "edit_project",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "f39d7d3f-b9dc-4705-a809-8d9e93d7eede"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "77ecf895-20ca-4aad-9607-241a21da3f43",
+                    "leftValue": "={{ $json.action_id }}",
+                    "rightValue": "validate_project",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        3088,
+        2352
+      ],
+      "id": "989ad2b5-5cde-468b-b461-c58b4c9e270a",
+      "name": "Switch type d'action de validation1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const pole_value =$input.first().json.pole ;\n\nvar pole_name =\"\";\nswitch (pole_value){\n  case \"dev\" :\n    pole_name = \"Pôle Tech\";\n    break;\n  case \"jur\" :\n    pole_name = \"Pôle juridique\";\n    break;\n  case \"cons\" :\n    pole_name = \"Pôle consultance\";\n    break;\n  case \"com\" :\n    pole_name = \"Pôle communication\";\n    break;\n  case \"egov\" :\n    pole_name = \"EGov\";\n    break;\n  case \"bizdev\" :\n    pole_name = \"Pôle Bizdev\";\n    break;\n  case \"rp\":\n    pole_name = \"Pôle RP\";\n    break;\n  default:\n    break;\n}\n\nconst result = [{\n  ...$input.first().json,\n  trigger_id:\n$('Extraction données formulaire1').first().json.trigger_id,\n     pole_name : pole_name\n}]\nreturn result;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3616,
+        1920
+      ],
+      "id": "ccc11618-4b5c-4085-8dc3-a97db98d8d06",
+      "name": "Préparation donnée formulaire update1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const data =$('Préparation donnée formulaire update1').first().json;\n\nconst trigger_id = data.trigger_id;\n\nconst poleMapping = {\n  'Pôle Tech': 'dev',\n  'Pôle consultance': 'cons',\n  'Pôle communication': 'com',\n  'Pôle juridique': 'jur',\n  'EGov': 'egov',\n  'Pôle Bizdev': 'bizdev',\n  'Pôle RP': 'rp'\n};\n\n\n// ===== CLIENTS =====\n\nconst clients = $input.first().json.results_ption\n  .map(item => ({\n    text: { \n      type: \"plain_text\", \n      text: String(item.nom)\n    },\n    value: String(item.value_nom)\n  }));\n\n//======EQUIPE======\n  const equipes = $input.first().json.equipe_options\n  .map(item => ({\n    text: { \n      type: \"plain_text\", \n      text: String(item.nom)\n    },\n    value: String(item.id_notion)\n  }));\n\n// ===== PARSE DATA =====\n\nconst poles =\ntypeof data.pole === \"string\"\n  ? JSON.parse(data.pole)\n  : data.pole;\n\nconst contacts =\ntypeof data.contacts === \"string\"\n  ? JSON.parse(data.contacts)\n  : data.contacts || [];\n\nconst equipes_parse =\ntypeof data.equipes === \"string\"\n  ? JSON.parse(data.equipes)\n  : data.equipes|| [];\n\n\n// ===== INITIAL POLES =====\n\nconst initial_poles_Options =\npoles.map(pole => ({\n  text: {\n    type: 'plain_text',\n    text: pole\n  },\n  value: poleMapping[pole] || ''\n}));\n\n\n// ===== INITIAL CLIENT =====\n\nconst initial_client_option =\nclients.find(\n  client => client.value === data.Client\n);\n\n//==== INITIAL EQUIPE =====\nconst map = {};\nfor (const row of $input.first().json.equipe_options ) {\n  map[row.nom] = row.id_notion;\n}\n\nconst initial_equipe_Options = equipes_parse.map(personne => ({\n  text: {\n    type: 'plain_text',\n    text: personne\n  },\n  value: map[personne] || personne   // ← l'id si trouvé, sinon le nom en secours\n}));\n\n// ===== MODAL BODY =====\n\nconst body = {\n  \n  trigger_id: trigger_id,\n\n  view: {\n\n    type: \"modal\",\n\n    callback_id: \"rh_edit_form\",\n\n    private_metadata: String(data.id),\n\n    title: {\n      type: \"plain_text\",\n      text: \"Modifier projet\"\n    },\n\n    submit: {\n      type: \"plain_text\",\n      text: \"Valider\"\n    },\n\n    close: {\n      type: \"plain_text\",\n      text: \"Annuler\"\n    },\n\n    blocks: [\n\n      {\n        type: \"input\",\n\n        block_id: \"project_name\",\n\n        label: {\n          type: \"plain_text\",\n          text: \"📁 Nom du projet\"\n        },\n\n        element: {\n          type: \"plain_text_input\",\n          action_id: \"value\",\n          initial_value: data.project_name\n        }\n      },\n\n      {\n        type: \"input\",\n\n        block_id: \"client_name\",\n\n        label: {\n          type: \"plain_text\",\n          text: \"🏢 Client\"\n        },\n\n        element: {\n          type: \"static_select\",\n\n          action_id: \"value\",\n\n          initial_option: initial_client_option,\n\n          options: clients\n        }\n      },\n\n      {\n        type: \"input\",\n\n        optional: true,\n\n        block_id: \"new_client\",\n\n        label: {\n          type: \"plain_text\",\n          text: \"➕ Nouveau client (si Autre)\"\n        },\n\n        element: {\n          type: \"plain_text_input\",\n          action_id: \"value\"\n        }\n      },\n\n      {\n        type: \"input\",\n\n        block_id: \"pole_name\",\n\n        label: {\n          type: \"plain_text\",\n          text: \"🧩 Les pôles\"\n        },\n\n        element: {\n\n          type: \"multi_static_select\",\n\n          action_id: \"value\",\n\n          placeholder: {\n            type: \"plain_text\",\n            text: \"Choisir un ou plusieurs pôles\"\n          },\n\n          initial_options:\n            initial_poles_Options,\n\n          options:\n            Object.entries(poleMapping)\n              .map(([label, val]) => ({\n\n                text: {\n                  type: \"plain_text\",\n                  text: label\n                },\n\n                value: val\n              }))\n        }\n      },\n         {\n        type: \"input\",\n\n        block_id: \"equipe_associe\",\n\n        label: {\n          type: \"plain_text\",\n          text: \"👥 Membres de l'équipe\"\n        },\n\n        element: {\n\n          type: \"multi_static_select\",\n\n          action_id: \"value\",\n\n          placeholder: {\n            type: \"plain_text\",\n            text: \"Choisir un ou plusieurs pôles\"\n          },\n\n          initial_options:\n            initial_equipe_Options,\n\n          options: equipes\n        }\n      },\n      {\n        type: \"input\",\n\n        block_id: \"date_debut\",\n\n        label: {\n          type: \"plain_text\",\n          text: \"📅 Date de début\"\n        },\n\n        element: {\n          type: \"datepicker\",\n          action_id: \"value\",\n          initial_date: data.date_debut\n        }\n      },\n\n      {\n        type: \"input\",\n\n        block_id: \"project_budget\",\n\n        optional: true,\n\n        label: {\n          type: \"plain_text\",\n          text: \"💰 Montant estimé (€)\"\n        },\n\n        element: {\n          type: \"plain_text_input\",\n          action_id: \"value\",\n          initial_value: data.montant || \"\"\n        }\n      },\n\n      {\n        type: \"input\",\n\n        block_id: \"contact\",\n\n        optional: true,\n\n        label: {\n          type: \"plain_text\",\n          text: \"📞 Contact\"\n        },\n\n        element: {\n\n          type: \"plain_text_input\",\n\n          action_id: \"value\",\n\n          multiline: true,\n\n          initial_value:\n            contacts.join('\\n')\n        }\n      },\n\n      {\n        type: \"input\",\n\n        block_id: \"description\",\n\n        label: {\n          type: \"plain_text\",\n          text: \"📝 Description\"\n        },\n\n        element: {\n\n          type: \"plain_text_input\",\n\n          multiline: true,\n\n          action_id: \"value\",\n\n          initial_value:\n            data.description\n        }\n      }\n    ]\n  }\n};\n\nreturn [{\n  json: {\n    body: JSON.stringify(body)\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4560,
+        1888
+      ],
+      "id": "e138e5d6-fb86-4149-9892-22531fd4be52",
+      "name": "Préparation body pour request1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://slack.com/api/views.open",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "SLACK_BOT_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.body }}",
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        4800,
+        1872
+      ],
+      "id": "bbe4cd3a-107f-442f-a573-ef3b6c345198",
+      "name": "HTTP Request _ Envoi formulaire modification1"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "path": "=/1 - Gestion administrative/tests/{{ $json.emplacement }}/{{ $json.folder_name }}"
+      },
+      "type": "n8n-nodes-base.nextCloud",
+      "typeVersion": 1,
+      "position": [
+        4176,
+        2272
+      ],
+      "id": "b25cd9b0-26e8-4b55-83d8-a12a8a25f888",
+      "name": "Creation dossier principal1",
+      "credentials": {
+        "nextCloudApi": {
+          "id": "oqQUw1flw37R99gm",
+          "name": "Unnamed credential"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        4560,
+        2304
+      ],
+      "id": "fb4e1dbd-ea3c-4042-be51-ebd8b72dd193",
+      "name": "Attente 2s création1",
+      "webhookId": "41ba1577-416c-493b-b32c-cc6b428d04e5"
+    },
+    {
+      "parameters": {
+        "jsCode": "let poles = $input.first().json.pole;\nlet contacts = $input.first().json.contacts;\nlet equipes = $input.first().json.equipes;\n\nif (typeof poles === \"string\") {\n  poles = JSON.parse(poles);\n}\nif (typeof contacts === \"string\") {\n  contacts = JSON.parse(contacts);\n}\nif (typeof equipes  === \"string\") {\n  equipes = JSON.parse(equipes);\n}\n\nconst result_contacts = contacts.map(item => ({\n    name : item\n}));\n\nconst result_poles = poles.map(item => ({\n    name : item\n}));\nconst result_equipes = equipes.map(item => ({\n    name : item\n}))\n\nreturn [{\n nom_projet: $input.first().json.project_name,\n client : $input.first().json.Client,\n description : $input.first().json.description,\n montant : $input.first().json.montant,\nresult_contacts,\n  equipes : result_equipes,\nfolder_path : `${$input.first().json.emplacement}/${$input.first().json.folder_name}`,\n  result_poles\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4144,
+        2528
+      ],
+      "id": "4247e218-e86d-4f5b-82de-4a93e39403f4",
+      "name": "Préparation données notion1"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "Pog15O56gTc90QZS",
+          "mode": "list",
+          "cachedResultName": "Id_project",
+          "cachedResultUrl": "/projects/arE7nkATuDeUBPuz/datatables/Pog15O56gTc90QZS"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        3120,
+        3408
+      ],
+      "id": "c3aeea9b-5de3-4243-811e-eaac997ffbf2",
+      "name": "Get row(s)5"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "channelId": {
+          "__rl": true,
+          "value": "D0B66EAA1QS",
+          "mode": "id"
+        },
+        "ts": "={{ $json.ts_message }}",
+        "messageType": "block",
+        "blocksUi": "={\n  \"channel\": \"D0B66EAA1QS\",\n  \"text\": \"🔔 Nouveau projet à valider 🔔\",\n  \"blocks\": [\n    {\n      \"type\": \"section\",\n      \"text\": {\n        \"type\": \"mrkdwn\",\n        \"text\": \"🔔 Nouveau projet à valider 🔔 *\\n\\n\\n*Projet:* {{ $json.project_name }}\\n*Client:* {{ $json.Client }} \\n*Pôle:* {{ JSON.parse($json.pole).join(\", \") }} \\n*Contact:* {{JSON.parse($json.contacts).join(\", \")}} \\n*Équipes :* {{JSON.parse($json.equipes).join(\", \")}} \\n*Date de début:* {{ $json.date_debut }}\\n*Description:* {{ $json.description }}\\n*Montant:* {{ $json.montant }}\\n\"\n      }\n    },\n    {\n      \"type\": \"actions\",\n      \"elements\": [\n        {\n          \"type\": \"button\",\n          \"text\": { \"type\": \"plain_text\", \"text\": \"✅ Valider\" },\n          \"style\": \"primary\",\n          \"action_id\": \"validate_project\",\n          \"value\": \"{{ $json.id }}\"\n        },\n        {\n          \"type\": \"button\",\n          \"text\": { \"type\": \"plain_text\", \"text\": \"✏️ Modifier\" },\n          \"action_id\": \"edit_project\",\n          \"value\": \"{{ $json.id }}\"\n        }\n      ]\n    }\n  ]\n}\n   ",
+        "updateFields": {},
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        3328,
+        3408
+      ],
+      "id": "f4ae8df7-be91-45d0-b3c7-8d58c1dfbec6",
+      "name": "Update a message1",
+      "webhookId": "a226746c-fa59-419c-9e12-29e304f00271",
+      "credentials": {
+        "slackApi": {
+          "id": "RvjZpTcV7ipuasPH",
+          "name": "n8n_bot_num"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "Pog15O56gTc90QZS",
+          "mode": "list",
+          "cachedResultName": "Id_project",
+          "cachedResultUrl": "/projects/arE7nkATuDeUBPuz/datatables/Pog15O56gTc90QZS"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $('Première insertion à la BD1').item.json.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ts_message": "={{ $json.message.ts }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "project_name",
+              "displayName": "project_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Client",
+              "displayName": "Client",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "pole",
+              "displayName": "pole",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "description",
+              "displayName": "description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "montant",
+              "displayName": "montant",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "contacts",
+              "displayName": "contacts",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "date_debut",
+              "displayName": "date_debut",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "ts_message",
+              "displayName": "ts_message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        3696,
+        1584
+      ],
+      "id": "ecf1a178-1048-463e-b21c-dfd8867adad3",
+      "name": "Update row(s)3"
+    },
+    {
+      "parameters": {
+        "jsCode": "const nom_projet = $input.first().json.project_name\n  .toLowerCase()\n  .replace(/ /g, \"-\");\n\nconst equipe = JSON.parse($input.first().json.equipes);\n\nreturn [\n  {\n    json: {\n      nom: nom_projet,\n      equipe: equipe \n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4240,
+        3232
+      ],
+      "id": "d3d84141-6570-4c7e-a2ba-04db40528149",
+      "name": "channel name for slack1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nreturn items.map(item => {\n  const data = item.json;\n  \n  // Transformer pole: array d'objets -> JSON string array de noms\n  const poleNames = (data.pole || []).map(p => p.pole_selected);\n  const poleString = JSON.stringify(poleNames);\n  \n  // Transformer contacts: array d'objets/mails -> JSON string array\n  let contactsString;\n  if (Array.isArray(data.contacts)) {\n    const mails = data.contacts.map(c => typeof c === 'string' ? c : c.mail).filter(Boolean);\n    contactsString = JSON.stringify(mails);\n  } else {\n    contactsString = data.contacts ?? \"[]\";\n  }\n\n  // Transformer equpe: array d'objets -> JSON string array de noms\n  const equipeNames = (data.equipes || []).map(e => e.equipe_selected);\n  const equipeString = JSON.stringify(equipeNames);\n  return {\n    json: {\n      project_name: data.project_name,\n      Client: data.Client,\n      pole: poleString,\n      description: data.description,\n      montant: data.montant ?? \"\",\n      contacts: contactsString,\n      equipes: equipeString,\n      date_debut: data.date_debut,\n      id: data.id,\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3296,
+        2960
+      ],
+      "id": "8466f82f-595c-4929-9a4d-5eb30b6b4bc1",
+      "name": "json item into string1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"response_action\": \"clear\"\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2720,
+        2288
+      ],
+      "id": "0c7b51f8-5ce9-461b-8059-1ef851f11488",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2736,
+        2560
+      ],
+      "id": "08b857b1-e46d-4678-a570-a91710edf846",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"response_action\": \"clear\"\n}",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2672,
+        2912
+      ],
+      "id": "0ba78a9c-f1e2-4140-b83b-3794ae928014",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "resource": "channel",
+        "channelId": "={{ $('channel name for slack1').item.json.nom }}"
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        5024,
+        3232
+      ],
+      "id": "63783f30-fb01-4a4f-8c34-e07521298f98",
+      "name": "Create a channel1",
+      "webhookId": "fc31282c-3b37-47ce-837a-edae56436cb5",
+      "credentials": {
+        "slackApi": {
+          "id": "RvjZpTcV7ipuasPH",
+          "name": "n8n_bot_num"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        5264,
+        3232
+      ],
+      "id": "f9c405ba-8e13-4424-a1eb-0e5f7dc8ebfa",
+      "name": "Wait",
+      "webhookId": "54f7ec8f-3f0f-4277-84d8-1dadf1a833c7"
+    },
+    {
+      "parameters": {
+        "pageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{$json.url.match(/[a-f0-9]{32}$/)[0]}}",
+          "__regex": "^([0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12})"
+        },
+        "title": "Calendrier",
+        "blockUi": {
+          "blockValues": [
+            {}
+          ]
+        },
+        "options": {
+          "iconType": "emoji",
+          "icon": "📆"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        5664,
+        2352
+      ],
+      "id": "6ad2dcd7-a193-4db2-bd80-fe03911060c6",
+      "name": "Create a page calendrier",
+      "credentials": {
+        "notionApi": {
+          "id": "KiYrwiSIQVffZvho",
+          "name": "Notion account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pageId": {
+          "__rl": true,
+          "value": "={{$json.url.match(/[a-f0-9]{32}$/)[0]}}",
+          "mode": "id"
+        },
+        "title": "Contexte de la mission",
+        "options": {
+          "iconType": "emoji",
+          "icon": "🧭"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        5792,
+        2240
+      ],
+      "id": "169abec1-4cb3-493a-9a85-630c67f64c60",
+      "name": "Create a page",
+      "credentials": {
+        "notionApi": {
+          "id": "KiYrwiSIQVffZvho",
+          "name": "Notion account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{$json.url.match(/[a-f0-9]{32}$/)[0]}}",
+          "__regex": "^([0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12})"
+        },
+        "title": "Suivi financier",
+        "options": {
+          "icon": "💸"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        5808,
+        2464
+      ],
+      "id": "f6e1f57a-1949-49f6-a562-01fdd373dc14",
+      "name": "Create a page1",
+      "credentials": {
+        "notionApi": {
+          "id": "KiYrwiSIQVffZvho",
+          "name": "Notion account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{$json.url.match(/[a-f0-9]{32}$/)[0]}}",
+          "__regex": "^([0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12})"
+        },
+        "title": "Documentation",
+        "options": {
+          "icon": "💼"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        5664,
+        2560
+      ],
+      "id": "7b2fb4a5-c3af-4a28-9773-d2c61236c790",
+      "name": "Create a page2",
+      "credentials": {
+        "notionApi": {
+          "id": "KiYrwiSIQVffZvho",
+          "name": "Notion account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "pageId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{$json.url.match(/[a-f0-9]{32}$/)[0]}}",
+          "__regex": "^([0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12})"
+        },
+        "title": "Notes de réunion",
+        "options": {
+          "icon": "🗒️"
+        }
+      },
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [
+        5792,
+        2672
+      ],
+      "id": "8a1f70de-6e23-42f7-9d59-e19c5c6b7fcb",
+      "name": "Create a page3",
+      "credentials": {
+        "notionApi": {
+          "id": "KiYrwiSIQVffZvho",
+          "name": "Notion account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.notion.com/v1/databases",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "API_NOTION_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Notion-Version",
+              "value": "2022-06-28"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"parent\": {\n    \"type\": \"page_id\",\n    \"page_id\": \"{{ $json.id }}\"\n  },\n\n  \"icon\": {\n    \"type\": \"emoji\",\n    \"emoji\": \"📋\"\n  },\n   \"is_inline\": true,\n  \"title\": [\n    {\n      \"type\": \"text\",\n      \"text\": {\n        \"content\": \" Suivi de projet\"\n      }\n    }\n  ],\n\n  \"properties\": {\n    \"Nom\": {\n      \"title\": {}\n    },\n\n    \"Statut\": {\n      \"status\": {}\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        5792,
+        2832
+      ],
+      "id": "e80ae9f2-a5b4-42fa-b184-bf00244caa30",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tu analyses des projets.\n\nRéponds uniquement avec un JSON valide.\n\nContraintes :\n\n* Aucun texte avant le JSON.\n* Aucun texte après le JSON.\n* \"emoji\" doit contenir un seul emoji Unicode valide.\n* \"emoji\" ne doit jamais être vide.\n* \"query\" doit être une requête Unsplash en anglais.\n* \"query\" doit contenir 2 à 3 mots maximum.\n* \"query\" doit être visuelle, simple et photographiable.\n* Ne pas utiliser de termes techniques, acronymes ou noms de logiciels.\n\nFormat obligatoire :\n\n{\n\"emoji\": \"🏙️\",\n\"query\": \"city hall\"\n}\n\nProjet :\n{{ $json.project_name }}\n\nDescription :\n{{ $json.description }}\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        4048,
+        2816
+      ],
+      "id": "1eb82122-ad65-4580-b4e3-da3cde20b600",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "llama-3.1-8b-instant",
+          "mode": "list",
+          "cachedResultName": "llama-3.1-8b-instant"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        4080,
+        3024
+      ],
+      "id": "4e5b68fe-d10e-4686-9888-3ece4a1976b0",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "GdiG2GmCNpDbshjr",
+          "name": "OpenAI account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw =\n$input.first().json.output;\n\nreturn [\n  {\n    json: JSON.parse(raw)\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4528,
+        2864
+      ],
+      "id": "0abb5698-3ac3-41cf-ad9a-105d49499e00",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "url": "https://api.unsplash.com/search/photos",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{ $json.query }}"
+            },
+            {
+              "name": "per_page",
+              "value": "1"
+            },
+            {
+              "name": "orientation",
+              "value": "landscape"
+            },
+            {
+              "name": "content_filter",
+              "value": "high"
+            },
+            {
+              "name": "order_by",
+              "value": "relevant"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization ",
+              "value": "Client-ID API_UNSPLACH_KEY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        4736,
+        2864
+      ],
+      "id": "699d17fe-2233-4ae7-bce6-659fead1cdbc",
+      "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    emoji  : $('Code in JavaScript1').first().json.emoji,\n    image : $input.first().json.results[0].urls.regular\n  }\n]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4880,
+        2864
+      ],
+      "id": "dfc20018-f534-45e8-b456-210060e7e068",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        5072,
+        2640
+      ],
+      "id": "617afaad-4439-4cbe-9359-360a2bfa1be2",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.notion.com/v1/pages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "API_NOTION_KEY"
+            },
+            {
+              "name": "Notion-Version",
+              "value": "2022-06-28"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/json",
+        "body": "={{\n{\n  parent: {\n    database_id: \"fc911b22-e6f5-49bd-af66-fc23b48dbbbf\"\n  },\n\n  icon: {\n    type: \"emoji\",\n    emoji: $json.emoji\n  },\n\n  cover: {\n    type: \"external\",\n    external: {\n      url: $json.image\n    }\n  },\n\n  properties: {\n\n    \"Noms des projets\": {\n      title: [\n        {\n          text: {\n            content: `${$json.nom_projet}-${$json.client}`\n          }\n        }\n      ]\n    },\n\n    \"Pôle en charge\": {\n      multi_select: $json.result_poles\n    },\n\n    \"Contact client\": {\n  rich_text: [\n    {\n      text: {\n        content: $json.result_contacts\n          .map(c => c.name)\n          .join(\", \")\n      }\n    }\n  ]\n},\n\n    \"Client\": {\n      select: {\n        name: $json.client\n      }\n    },\n\n    \"Description\": {\n      rich_text: [\n        {\n          text: {\n            content: $json.description\n          }\n        }\n      ]\n    },\n\n    \"NextCloud\": {\n      url:\n        \"https://nextcloud.numericite.fr/index.php/apps/files/?dir=/1%20-%20Gestion%20administrative/tests/\" +\n        $json.folder_path\n    },\n\n    \"Status\": {\n      \"select\": {\n        name: \"In Progress\"\n      }\n    },\n\n    \"Rédaction réal\": {\n      status: {\n        name: \"Réal à rédiger\"\n      }\n    },\n\n    \"Montant du projet\": {\n      number: Number($json.montant || 0)\n    },\n    \"Equipe\" : {\n       people: $json.ids.map(id => ({ object: \"user\", id }))\n    }\n\n  }\n}\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        5248,
+        2640
+      ],
+      "id": "4adab134-1bff-4f36-9ac0-ab2c2ddd9b97",
+      "name": "HTTP Request4"
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0B67RD98FK",
+          "mode": "list",
+          "cachedResultName": "les-nouveaux-projets"
+        },
+        "text": "=🔥 Nouveau marché gagné 🔥 :\n  - *Nom :* {{ $json.project_name }}.\n  - *Client :* {{ $json.Client}}.\n  - *Date de début :* {{ $json.date_debut }}.\n  - *Les pole :*{{ $json.pole }}.  ",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.4,
+      "position": [
+        5648,
+        3024
+      ],
+      "id": "43198c48-8f50-4333-aa27-aa3c61b166e2",
+      "name": "Notif new project",
+      "webhookId": "d696bcee-963a-4760-9dc1-20266bb79f9e",
+      "credentials": {
+        "slackApi": {
+          "id": "RvjZpTcV7ipuasPH",
+          "name": "n8n_bot_num"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://preprod.strapi.ricobot.numericite.eu/api/missions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "API_KEY_RICO"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"data\": {\n    \"name\": \"{{ $json.project_name }}\",\n    \"description\": \"{{ $json.description }}\",\n    \"start_date\": \"{{ $json.date_debut }}\",\n    \"client_name\": \"{{ $json.Client}}\",\n    \"shouldBeValidated\": true\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        4112,
+        3472
+      ],
+      "id": "157f1ba7-3882-46be-8b49-483dafcb5f92",
+      "name": "Création projet Ricobot à valider"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "jmzL8aP1CKulEIQW",
+          "mode": "list",
+          "cachedResultName": "Client",
+          "cachedResultUrl": "/projects/arE7nkATuDeUBPuz/datatables/jmzL8aP1CKulEIQW"
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        3920,
+        1760
+      ],
+      "id": "d0f4567d-5ddf-4436-a8c0-b20f117350d8",
+      "name": "Get client"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "nIxYvjqCsNB6atiZ",
+          "mode": "list",
+          "cachedResultName": "Equipe",
+          "cachedResultUrl": "/projects/arE7nkATuDeUBPuz/datatables/nIxYvjqCsNB6atiZ"
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        3936,
+        1952
+      ],
+      "id": "dd74bfbf-9376-4557-8e63-e1702e3b495c",
+      "name": "Get equipe"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      equipe_options: $('Get equipe').all().map(item => item.json),\n      results_ption: $('Get client').all().map(item => item.json)\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4336,
+        1888
+      ],
+      "id": "6fd90cd8-8395-419d-9352-e54c2838c537",
+      "name": "Code in JavaScript3"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        4160,
+        1888
+      ],
+      "id": "335b5482-8394-4cbb-a587-8df7fb4f90e4",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "nIxYvjqCsNB6atiZ",
+          "mode": "list",
+          "cachedResultName": "Equipe",
+          "cachedResultUrl": "/projects/arE7nkATuDeUBPuz/datatables/nIxYvjqCsNB6atiZ"
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        4368,
+        2720
+      ],
+      "id": "7cb37d30-3c2b-4d07-8aad-40f2bdacfa19",
+      "name": "Get row(s)"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "Auxn7evLRVGJXKpi",
+          "mode": "list",
+          "cachedResultName": "pole_person_table",
+          "cachedResultUrl": "/projects/arE7nkATuDeUBPuz/datatables/Auxn7evLRVGJXKpi"
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        4448,
+        3232
+      ],
+      "id": "ef39e45a-e531-46b8-b748-47dbc62478e4",
+      "name": "Get row(s)2"
+    },
+    {
+      "parameters": {
+        "jsCode": "const map = {};\n\nfor (const row of $input.all()) {\n  map[row.json.nom_notion] = row.json.id_user;\n}\n\nconst equipes = $('channel name for slack1').first().json.equipe || [];\n\nreturn [{\n  json: {\n    ids: equipes\n      .map(e => map[e])\n      .filter(Boolean)\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4720,
+        3232
+      ],
+      "id": "04452909-1ee1-42df-b452-45a3af22e40a",
+      "name": "search_id_equipe"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://slack.com/api/conversations.invite",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "SLACK_N8N_BOT"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"channel\": \"{{ $('Create a channel1').first().json.id }}\",\n  \"users\": \"{{$('search_id_equipe').item.json.ids.join(',') }}\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        5552,
+        3232
+      ],
+      "id": "6dacba29-50f2-4c7d-8131-fb33de885dd5",
+      "name": "Invitation équipe"
+    },
+    {
+      "parameters": {
+        "jsCode": "const map = {};\n\nfor (const row of $input.all()) {\n  map[row.json.nom] = row.json.id_notion;\n}\n\nconst equipes =$('Préparation données notion1').first().json.equipes || [];\n\nreturn [\n  {\n    json: {\n      ids: equipes\n        .map(e => map[e.name])\n        .filter(Boolean)\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        4608,
+        2720
+      ],
+      "id": "968430a8-b680-48a7-8ebd-8e92dcda498a",
+      "name": "search_id_notion"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "jmzL8aP1CKulEIQW",
+          "mode": "list",
+          "cachedResultName": "Client",
+          "cachedResultUrl": "/projects/arE7nkATuDeUBPuz/datatables/jmzL8aP1CKulEIQW"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "nom": "={{ $json.client_name }}",
+            "value_nom": "={{ $json.client_name }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "nom",
+              "displayName": "nom",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "value_nom",
+              "displayName": "value_nom",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        3056,
+        2112
+      ],
+      "id": "39746192-e785-4ae9-8e75-b1d0e5522fe0",
+      "name": "Insert new client name"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Get row(s)3": {
+      "main": [
+        [
+          {
+            "node": "Extraction_donnes1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraction_donnes1": {
+      "main": [
+        [
+          {
+            "node": "channel name for slack1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Création projet Ricobot à valider",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Préparation données notion1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Creation dossier principal1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)4": {
+      "main": [
+        [
+          {
+            "node": "Préparation donnée formulaire update1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "rename_var1": {
+      "main": [
+        [
+          {
+            "node": "Update row(s)2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "json item into string1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get row(s)5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Attente action formulaire1": {
+      "main": [
+        [
+          {
+            "node": "Extraction données formulaire1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraction données formulaire1": {
+      "main": [
+        [
+          {
+            "node": "Switch type d'actions1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch type d'actions1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Première insertion à la BD1": {
+      "main": [
+        [
+          {
+            "node": "Envoi message vérification à Marie1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envoi message vérification à Marie1": {
+      "main": [
+        [
+          {
+            "node": "Update row(s)3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch type d'action de validation1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get row(s)3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Préparation donnée formulaire update1": {
+      "main": [
+        [
+          {
+            "node": "Get client",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get equipe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Préparation body pour request1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request _ Envoi formulaire modification1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Creation dossier principal1": {
+      "main": [
+        [
+          {
+            "node": "Attente 2s création1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Attente 2s création1": {
+      "main": [
+        [
+          {
+            "node": "Create folder \"doc admin\"1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create a folder \" livrable\"1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create a folder facturations1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Préparation données notion1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)5": {
+      "main": [
+        [
+          {
+            "node": "Update a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "channel name for slack1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "json item into string1": {
+      "main": [
+        [
+          {
+            "node": "Extraction_donnes1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Première insertion à la BD1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Insert new client name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch type d'action de validation1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook2": {
+      "main": [
+        [
+          {
+            "node": "rename_var1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a channel1": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Invitation équipe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a page calendrier": {
+      "main": [
+        []
+      ]
+    },
+    "Create a page": {
+      "main": [
+        []
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "Create a page",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create a page calendrier",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create a page1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create a page2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Create a page3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Notif new project",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update a message1": {
+      "main": [
+        []
+      ]
+    },
+    "Notif new project": {
+      "main": [
+        []
+      ]
+    },
+    "Get client": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get equipe": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "node": "Préparation body pour request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "search_id_notion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)2": {
+      "main": [
+        [
+          {
+            "node": "search_id_equipe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search_id_equipe": {
+      "main": [
+        [
+          {
+            "node": "Create a channel1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "search_id_notion": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "a35fc6bd-3add-42bf-8a64-8a9928c07ecd",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f46f5ebc6334fbb1b70f525a5e6a924e44508c49a0f8753a49481cca7ca569a3"
+  },
+  "id": "I8SrLAD8f39H23SY",
+  "tags": []
+}
