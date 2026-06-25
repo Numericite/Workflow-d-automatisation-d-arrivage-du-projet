@@ -1,0 +1,221 @@
+{
+  "name": "Execute_commande_numéricité",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "num_commande",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -560,
+        96
+      ],
+      "id": "23737dfb-0214-41df-a54d-525ad8b1af6a",
+      "name": "Récéption de commande1",
+      "webhookId": "9bfd2776-bb22-4215-b659-983613307b42"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://slack.com/api/views.open",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer SLACK_KEY"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json;charset=utf-8"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"trigger_id\": \"{{ $('Récéption de commande1').item.json.body.trigger_id }}\",\n  \"view\": {\n    \"type\": \"modal\",\n    \"callback_id\": \"new_project_form\",\n    \"notify_on_close\": true,\n    \"title\": {\n      \"type\": \"plain_text\",\n      \"text\": \"Nouveau Projet\"\n    },\n    \"submit\": {\n      \"type\": \"plain_text\",\n      \"text\": \"Créer\"\n    },\n    \"close\": {\n      \"type\": \"plain_text\",\n      \"text\": \"Annuler\"\n    },\n    \"blocks\": [\n      {\n        \"type\": \"section\",\n        \"text\": {\n          \"type\": \"mrkdwn\",\n          \"text\": \"*Créer un nouveau projet*\\n\\nVeuillez remplir les informations du projet.\"\n        }\n      },\n      {\n        \"type\": \"divider\"\n      },\n      {\n        \"type\": \"input\",\n        \"block_id\": \"project_name\",\n        \"label\": {\n          \"type\": \"plain_text\",\n          \"text\": \"📁 Nom du projet\"\n        },\n        \"element\": {\n          \"type\": \"plain_text_input\",\n          \"action_id\": \"value\",\n          \"placeholder\": {\n            \"type\": \"plain_text\",\n            \"text\": \"Nom du projet\"\n          }\n        }\n      },\n      {\n        \"type\": \"input\",\n        \"block_id\": \"client_name\",\n        \"label\": {\n          \"type\": \"plain_text\",\n          \"text\": \"🏢 Client\"\n        },\n        \"element\": {\n          \"type\": \"static_select\",\n          \"action_id\": \"value\",\n          \"placeholder\": {\n            \"type\": \"plain_text\",\n            \"text\": \"DINUM\"\n          },\n          \"options\": {{ JSON.stringify($json.results_ption) }}\n        }\n      },\n      {\n        \"type\": \"input\",\n        \"optional\": true,\n        \"block_id\": \"new_client\",\n        \"label\": {\n          \"type\": \"plain_text\",\n          \"text\": \"➕ Nouveau client (si Autre)\"\n        },\n        \"element\": {\n          \"type\": \"plain_text_input\",\n          \"action_id\": \"value\"\n        }\n      },\n      {\n        \"type\": \"input\",\n        \"block_id\": \"pole_name\",\n        \"label\": {\n          \"type\": \"plain_text\",\n          \"text\": \"🧩 Le pôle\"\n        },\n        \"element\": {\n          \"type\": \"multi_static_select\",\n          \"action_id\": \"value\",\n          \"placeholder\": {\n            \"type\": \"plain_text\",\n            \"text\": \"Choisir un pôle\"\n          },\n          \"options\": [\n            { \"text\": { \"type\": \"plain_text\", \"text\": \"Pôle Tech\" }, \"value\": \"dev\" },\n            { \"text\": { \"type\": \"plain_text\", \"text\": \"Pôle juridique\" }, \"value\": \"jur\" },\n            { \"text\": { \"type\": \"plain_text\", \"text\": \"Pôle consultance\" }, \"value\": \"cons\" },\n            { \"text\": { \"type\": \"plain_text\", \"text\": \"Pôle communication\" }, \"value\": \"com\" },\n            { \"text\": { \"type\": \"plain_text\", \"text\": \"EGov\" }, \"value\": \"egov\" },\n            { \"text\": { \"type\": \"plain_text\", \"text\": \"Pôle Bizdev\" }, \"value\": \"bizdev\" },\n            { \"text\": { \"type\": \"plain_text\", \"text\": \"Pôle RP\" }, \"value\": \"rp\" }\n          ]\n        }\n      },\n      {\n        \"type\": \"input\",\n        \"optional\": true,\n        \"block_id\": \"equipe_associe\",\n        \"label\": {\n          \"type\": \"plain_text\",\n          \"text\": \"👥 Membres de l'équipe\"\n        },\n        \"element\": {\n          \"type\": \"multi_static_select\",\n          \"action_id\": \"value\",\n          \"placeholder\": {\n            \"type\": \"plain_text\",\n            \"text\": \"Choisir un ou plusieurs membres\"\n          },\n          \"options\": {{ JSON.stringify($json.equipe_options) }}\n        }\n      },\n      {\n        \"type\": \"input\",\n        \"block_id\": \"date_debut\",\n        \"label\": {\n          \"type\": \"plain_text\",\n          \"text\": \"📅 Date de début de projet\"\n        },\n        \"element\": {\n          \"type\": \"datepicker\",\n          \"action_id\": \"value\",\n          \"placeholder\": {\n            \"type\": \"plain_text\",\n            \"text\": \"Choisir une date\"\n          }\n        }\n      },\n      {\n        \"type\": \"input\",\n        \"optional\": true,\n        \"block_id\": \"project_budget\",\n        \"label\": {\n          \"type\": \"plain_text\",\n          \"text\": \"💰 Montant estimé (€)\"\n        },\n        \"element\": {\n          \"type\": \"plain_text_input\",\n          \"action_id\": \"value\"\n        }\n      },\n      {\n        \"type\": \"input\",\n        \"optional\": true,\n        \"block_id\": \"contact\",\n        \"label\": {\n          \"type\": \"plain_text\",\n          \"text\": \"📞 Contact client\"\n        },\n        \"element\": {\n          \"type\": \"plain_text_input\",\n          \"multiline\": true,\n          \"action_id\": \"value\",\n          \"placeholder\": {\n            \"type\": \"plain_text\",\n            \"text\": \"Nom, email ou téléphone\"\n          }\n        }\n      },\n      {\n        \"type\": \"input\",\n        \"block_id\": \"description\",\n        \"label\": {\n          \"type\": \"plain_text\",\n          \"text\": \"📝 Description du besoin\"\n        },\n        \"element\": {\n          \"type\": \"plain_text_input\",\n          \"multiline\": true,\n          \"action_id\": \"value\",\n          \"placeholder\": {\n            \"type\": \"plain_text\",\n            \"text\": \"Décrire le projet...\"\n          }\n        }\n      }\n    ]\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        848,
+        128
+      ],
+      "id": "8cb4938d-f78c-42f1-aa1c-7efb554427d9",
+      "name": "HTTP Request - formulaire de saisie1"
+    },
+    {
+      "parameters": {
+        "language": "pythonNative",
+        "pythonCode": "clients = _items   # chaque item = une ligne de la data table\n\nslack_client_options = []\n\nfor client in clients:\n    nom = client[\"json\"].get(\"nom\", \"\")\n    if not nom:\n        continue\n    slack_client_options.append({\n        \"text\": {\n            \"type\": \"plain_text\",\n            \"text\": str(nom)\n        },\n        \"value\": str(nom)\n    })\n\n# Option \"Autre\" ajoutée à la fin\nslack_client_options.append({\n    \"text\": {\n        \"type\": \"plain_text\",\n        \"text\": \"Autre\"\n    },\n    \"value\": \"autre\"\n})\n\nreturn [\n    {\n        \"results_ption\": slack_client_options\n    }\n]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        304
+      ],
+      "id": "a404bd0f-ffe2-4d92-95ce-8ad10316e403",
+      "name": "Récupération client2"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  equipe_options: $input.all().map(item => ({\n    text: { type: \"plain_text\", text: item.json.nom },\n    value: item.json.id_notion\n  }))\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        -32
+      ],
+      "id": "07846dfc-f6cf-4a3b-823e-5b6df237f92e",
+      "name": "equipe_option"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "jmzL8aP1CKulEIQW",
+          "mode": "list",
+          "cachedResultName": "Client",
+          "cachedResultUrl": "/projects/arE7nkATuDeUBPuz/datatables/jmzL8aP1CKulEIQW"
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -176,
+        304
+      ],
+      "id": "39035c1e-0469-4709-ab4d-e7b84153f6dd",
+      "name": "Get clients"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "nIxYvjqCsNB6atiZ",
+          "mode": "list",
+          "cachedResultName": "Equipe",
+          "cachedResultUrl": "/projects/arE7nkATuDeUBPuz/datatables/nIxYvjqCsNB6atiZ"
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -176,
+        -32
+      ],
+      "id": "1f6fbbf3-cac5-4a34-bedc-9307fabc144b",
+      "name": "Get equipe"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        608,
+        128
+      ],
+      "id": "62f307fa-8bae-4126-8aa4-d238aa64867d",
+      "name": "Merge"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Récéption de commande1": {
+      "main": [
+        [
+          {
+            "node": "Get equipe",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Get clients",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Récupération client2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "equipe_option": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get clients": {
+      "main": [
+        [
+          {
+            "node": "Récupération client2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get equipe": {
+      "main": [
+        [
+          {
+            "node": "equipe_option",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - formulaire de saisie1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d642e582-8178-4aa5-80d5-019695c2b72b",
+  "meta": {
+    "instanceId": "f46f5ebc6334fbb1b70f525a5e6a924e44508c49a0f8753a49481cca7ca569a3"
+  },
+  "id": "y8ZNGsCZwr8hBfsg",
+  "tags": []
+}
