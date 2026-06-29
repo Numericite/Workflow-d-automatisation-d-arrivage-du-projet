@@ -122,8 +122,8 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        3360,
-        2128
+        3392,
+        2256
       ],
       "id": "112b869b-9c92-4ac8-90fc-7b6d81e2fac4",
       "name": "Get row(s)4"
@@ -574,8 +574,8 @@
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.4,
       "position": [
-        3408,
-        1648
+        3344,
+        1760
       ],
       "id": "2efe0c3b-eea2-4a4e-95d9-8d6bb1305cd3",
       "name": "Envoi message vérification à Marie1",
@@ -656,8 +656,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        3616,
-        1920
+        3600,
+        2048
       ],
       "id": "ccc11618-4b5c-4085-8dc3-a97db98d8d06",
       "name": "Préparation donnée formulaire update1"
@@ -669,8 +669,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4560,
-        1888
+        4496,
+        2032
       ],
       "id": "e138e5d6-fb86-4149-9892-22531fd4be52",
       "name": "Préparation body pour request1"
@@ -688,7 +688,7 @@
             },
             {
               "name": "Authorization",
-              "value": "SLACK_BOT_KEY"
+              "value": "Bearer SLACK_N8N_BOT"
             }
           ]
         },
@@ -702,8 +702,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        4800,
-        1872
+        4736,
+        2016
       ],
       "id": "bbe4cd3a-107f-442f-a573-ef3b6c345198",
       "name": "HTTP Request _ Envoi formulaire modification1"
@@ -749,8 +749,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4144,
-        2528
+        4128,
+        2592
       ],
       "id": "4247e218-e86d-4f5b-82de-4a93e39403f4",
       "name": "Préparation données notion1"
@@ -925,8 +925,8 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        3696,
-        1584
+        3632,
+        1696
       ],
       "id": "ecf1a178-1048-463e-b21c-dfd8867adad3",
       "name": "Update row(s)3"
@@ -1198,7 +1198,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "API_NOTION_KEY"
+              "value": "Bearer API_KEY_NOTION"
             },
             {
               "name": "Content-Type",
@@ -1227,13 +1227,13 @@
     {
       "parameters": {
         "promptType": "define",
-        "text": "=Tu analyses des projets.\n\nRéponds uniquement avec un JSON valide.\n\nContraintes :\n\n* Aucun texte avant le JSON.\n* Aucun texte après le JSON.\n* \"emoji\" doit contenir un seul emoji Unicode valide.\n* \"emoji\" ne doit jamais être vide.\n* \"query\" doit être une requête Unsplash en anglais.\n* \"query\" doit contenir 2 à 3 mots maximum.\n* \"query\" doit être visuelle, simple et photographiable.\n* Ne pas utiliser de termes techniques, acronymes ou noms de logiciels.\n\nFormat obligatoire :\n\n{\n\"emoji\": \"🏙️\",\n\"query\": \"city hall\"\n}\n\nProjet :\n{{ $json.project_name }}\n\nDescription :\n{{ $json.description }}\n",
+        "text": "=Tu analyses des projets.\n\nRéponds uniquement avec un JSON valide.\n\nContraintes :\n\n* Aucun texte avant le JSON.\n* \"query\" doit être une requête Unsplash en anglais.\n* \"query\" doit contenir 2 à 3 mots maximum.\n* \"query\" doit être visuelle, simple et photographiable.\n* Ne pas utiliser de termes techniques, acronymes ou noms de logiciels.\n\nFormat obligatoire :\n\n{\n\"query\": \"city hall\"\n}\n\nProjet :\n{{ $json.project_name }}\n\nDescription :\n{{ $json.description }}\n",
         "options": {}
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        4048,
+        4016,
         2816
       ],
       "id": "1eb82122-ad65-4580-b4e3-da3cde20b600",
@@ -1253,7 +1253,7 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.3,
       "position": [
-        4080,
+        3984,
         3024
       ],
       "id": "4e5b68fe-d10e-4686-9888-3ece4a1976b0",
@@ -1272,8 +1272,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4528,
-        2864
+        4384,
+        2928
       ],
       "id": "0abb5698-3ac3-41cf-ad9a-105d49499e00",
       "name": "Code in JavaScript1"
@@ -1311,7 +1311,7 @@
           "parameters": [
             {
               "name": "Authorization ",
-              "value": "Client-ID API_UNSPLACH_KEY"
+              "value": "Client-ID API_Unsplach"
             }
           ]
         },
@@ -1320,8 +1320,8 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.4,
       "position": [
-        4736,
-        2864
+        4592,
+        2928
       ],
       "id": "699d17fe-2233-4ae7-bce6-659fead1cdbc",
       "name": "HTTP Request3"
@@ -1333,8 +1333,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4880,
-        2864
+        4736,
+        2928
       ],
       "id": "dfc20018-f534-45e8-b456-210060e7e068",
       "name": "Code in JavaScript2"
@@ -1349,8 +1349,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        5072,
-        2640
+        5024,
+        2608
       ],
       "id": "617afaad-4439-4cbe-9359-360a2bfa1be2",
       "name": "Merge"
@@ -1364,7 +1364,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "API_NOTION_KEY"
+              "value": "Bearer API_KEY_NOTION"
             },
             {
               "name": "Notion-Version",
@@ -1379,7 +1379,7 @@
         "sendBody": true,
         "contentType": "raw",
         "rawContentType": "application/json",
-        "body": "={{\n{\n  parent: {\n    database_id: \"fc911b22-e6f5-49bd-af66-fc23b48dbbbf\"\n  },\n\n  icon: {\n    type: \"emoji\",\n    emoji: $json.emoji\n  },\n\n  cover: {\n    type: \"external\",\n    external: {\n      url: $json.image\n    }\n  },\n\n  properties: {\n\n    \"Noms des projets\": {\n      title: [\n        {\n          text: {\n            content: `${$json.nom_projet}-${$json.client}`\n          }\n        }\n      ]\n    },\n\n    \"Pôle en charge\": {\n      multi_select: $json.result_poles\n    },\n\n    \"Contact client\": {\n  rich_text: [\n    {\n      text: {\n        content: $json.result_contacts\n          .map(c => c.name)\n          .join(\", \")\n      }\n    }\n  ]\n},\n\n    \"Client\": {\n      select: {\n        name: $json.client\n      }\n    },\n\n    \"Description\": {\n      rich_text: [\n        {\n          text: {\n            content: $json.description\n          }\n        }\n      ]\n    },\n\n    \"NextCloud\": {\n      url:\n        \"https://nextcloud.numericite.fr/index.php/apps/files/?dir=/1%20-%20Gestion%20administrative/tests/\" +\n        $json.folder_path\n    },\n\n    \"Status\": {\n      \"select\": {\n        name: \"In Progress\"\n      }\n    },\n\n    \"Rédaction réal\": {\n      status: {\n        name: \"Réal à rédiger\"\n      }\n    },\n\n    \"Montant du projet\": {\n      number: Number($json.montant || 0)\n    },\n    \"Equipe\" : {\n       people: $json.ids.map(id => ({ object: \"user\", id }))\n    }\n\n  }\n}\n}}",
+        "body": "={{\n{\n  parent: {\n    database_id: \"fc911b22-e6f5-49bd-af66-fc23b48dbbbf\"\n  },\n  cover: {\n    type: \"external\",\n    external: {\n      url: $json.image\n    }\n  },\n\n  properties: {\n\n    \"Noms des projets\": {\n      title: [\n        {\n          text: {\n            content: `${$json.nom_projet}-${$json.client}`\n          }\n        }\n      ]\n    },\n\n    \"Pôle en charge\": {\n      multi_select: $json.result_poles\n    },\n\n    \"Contact client\": {\n  rich_text: [\n    {\n      text: {\n        content: $json.result_contacts\n          .map(c => c.name)\n          .join(\", \")\n      }\n    }\n  ]\n},\n\n    \"Client\": {\n      select: {\n        name: $json.client\n      }\n    },\n\n    \"Description\": {\n      rich_text: [\n        {\n          text: {\n            content: $json.description\n          }\n        }\n      ]\n    },\n\n    \"NextCloud\": {\n      url:\n        \"https://nextcloud.numericite.fr/index.php/apps/files/?dir=/1%20-%20Gestion%20administrative/tests/\" +\n        $json.folder_path\n    },\n\n    \"Status\": {\n      \"select\": {\n        name: \"In Progress\"\n      }\n    },\n\n    \"Rédaction réal\": {\n      status: {\n        name: \"Réal à rédiger\"\n      }\n    },\n\n    \"Montant du projet\": {\n      number: Number($json.montant || 0)\n    },\n    \"Equipe\" : {\n       people: $json.ids.map(id => ({ object: \"user\", id }))\n    }\n\n  }\n}\n}}",
         "options": {}
       },
       "type": "n8n-nodes-base.httpRequest",
@@ -1400,7 +1400,7 @@
           "mode": "list",
           "cachedResultName": "les-nouveaux-projets"
         },
-        "text": "=🔥 Nouveau marché gagné 🔥 :\n  - *Nom :* {{ $json.project_name }}.\n  - *Client :* {{ $json.Client}}.\n  - *Date de début :* {{ $json.date_debut }}.\n  - *Les pole :*{{ $json.pole }}.  ",
+        "text": "=🔥 Nouveau marché gagné 🔥 :\n  - *Nom :* {{ $('Merge').item.json.nom_projet }}.\n  - *Client :*{{ $('Merge').item.json.client }}.\n  - *Descriptions : * {{ $('Merge').item.json.description }}",
         "otherOptions": {}
       },
       "type": "n8n-nodes-base.slack",
@@ -1428,7 +1428,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "API_KEY_RICO"
+              "value": "Bearer API_RICO_KEY"
             },
             {
               "name": "Content-Type",
@@ -1465,8 +1465,8 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        3920,
-        1760
+        3856,
+        1904
       ],
       "id": "d0f4567d-5ddf-4436-a8c0-b20f117350d8",
       "name": "Get client"
@@ -1486,8 +1486,8 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        3936,
-        1952
+        3872,
+        2096
       ],
       "id": "dd74bfbf-9376-4557-8e63-e1702e3b495c",
       "name": "Get equipe"
@@ -1499,8 +1499,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        4336,
-        1888
+        4272,
+        2032
       ],
       "id": "6fd90cd8-8395-419d-9352-e54c2838c537",
       "name": "Code in JavaScript3"
@@ -1514,8 +1514,8 @@
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3.2,
       "position": [
-        4160,
-        1888
+        4096,
+        2032
       ],
       "id": "335b5482-8394-4cbb-a587-8df7fb4f90e4",
       "name": "Merge1"
@@ -1584,7 +1584,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "SLACK_N8N_BOT"
+              "value": "Bearer SLACK_N8N_BOT"
             },
             {
               "name": "Content-Type",
@@ -1665,7 +1665,7 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1.1,
       "position": [
-        3056,
+        3088,
         2112
       ],
       "id": "39746192-e785-4ae9-8e75-b1d0e5522fe0",
@@ -1689,7 +1689,12 @@
       "main": [
         [
           {
-            "node": "channel name for slack1",
+            "node": "Préparation données notion1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
             "type": "main",
             "index": 0
           },
@@ -1699,7 +1704,7 @@
             "index": 0
           },
           {
-            "node": "Préparation données notion1",
+            "node": "channel name for slack1",
             "type": "main",
             "index": 0
           },
@@ -2225,13 +2230,13 @@
       ]
     }
   },
-  "active": false,
+  "active": true,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "a35fc6bd-3add-42bf-8a64-8a9928c07ecd",
+  "versionId": "abb57ea7-79b4-4adc-863e-7014af387672",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "f46f5ebc6334fbb1b70f525a5e6a924e44508c49a0f8753a49481cca7ca569a3"
